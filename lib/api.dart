@@ -99,7 +99,6 @@ class _MyChartState extends State<MyChart> {
                         ),
                         child: const Text('Linear'),
                       ),
-                      SizedBox(),
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
