@@ -54,7 +54,7 @@ class _MyChartState extends State<MyChart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Datos'),
+        title: Text('Gráficas'),
       ),
       body: FutureBuilder(
         future: fetchData(),
@@ -72,18 +72,30 @@ class _MyChartState extends State<MyChart> {
                   WidgetGrafica(
                     snapshot.data!.map((e) => DataGrafica(e.x, e.y1)).toList(),
                     titulo: 'Humedad',
+                    unidad: 'Porcentaje',
+                    minimo: -10,
+                    maximo: 50,
                   ),
                   WidgetGrafica(
                     snapshot.data!.map((e) => DataGrafica(e.x, e.y2)).toList(),
                     titulo: 'Humo',
+                    unidad: 'PPM',
+                    minimo: -15,
+                    maximo: 50,
                   ),
                   WidgetGrafica(
                     snapshot.data!.map((e) => DataGrafica(e.x, e.y3)).toList(),
                     titulo: 'Luz',
+                    unidad: 'CD',
+                    minimo: 0,
+                    maximo: 50,
                   ),
                   WidgetGrafica(
                     snapshot.data!.map((e) => DataGrafica(e.x, e.y4)).toList(),
                     titulo: 'Temperatura',
+                    unidad: 'Celsius',
+                    minimo: 0,
+                    maximo: 50,
                   ),
                   const SizedBox(
                     height: 40,
@@ -92,59 +104,20 @@ class _MyChartState extends State<MyChart> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromRGBO(27, 43, 90, 1.0),
-                        ),
-                        child: const Text('Linear'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {});
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromRGBO(27, 43, 90, 1.0),
                         ),
                         child: const Text('Actualizar'),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromRGBO(27, 43, 90, 1.0)),
-                        child: const Text('Pastel'),
-                      ),
                     ],
                   )
                 ],
               ),
             );
-
-            /*   return SfCartesianChart(
-              primaryXAxis: CategoryAxis(),
-              series: <LineSeries<ChartData, String>>[
-                LineSeries<ChartData, String>(
-                  dataSource: snapshot.data,
-                  xValueMapper: (ChartData data, _) => data.x,
-                  yValueMapper: (ChartData data, _) => data.y1,
-                ),
-                LineSeries<ChartData, String>(
-                  dataSource: snapshot.data,
-                  xValueMapper: (ChartData data, _) => data.x,
-                  yValueMapper: (ChartData data, _) => data.y2,
-                ),
-                LineSeries<ChartData, String>(
-                  dataSource: snapshot.data,
-                  xValueMapper: (ChartData data, _) => data.x,
-                  yValueMapper: (ChartData data, _) => data.y3,
-                ),
-                LineSeries<ChartData, String>(
-                  dataSource: snapshot.data,
-                  xValueMapper: (ChartData data, _) => data.x,
-                  yValueMapper: (ChartData data, _) => data.y4,
-                ),
-              ],
-            );*/
           }
         },
       ),
@@ -153,22 +126,36 @@ class _MyChartState extends State<MyChart> {
 }
 
 class WidgetGrafica extends StatelessWidget {
-  const WidgetGrafica(this.data, {super.key, required this.titulo});
+  const WidgetGrafica(
+    this.data, {
+    super.key,
+    required this.titulo,
+    this.minimo = -20,
+    this.maximo = 120,
+    required this.unidad,
+  });
 
   final List<DataGrafica> data;
   final String titulo;
+  final double minimo;
+  final double maximo;
+  final String unidad;
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
       title: ChartTitle(text: titulo),
       primaryXAxis: CategoryAxis(
-        majorGridLines: MajorGridLines(width: 0),
-        axisLine: AxisLine(width: 0),
+        majorGridLines: const MajorGridLines(width: 0),
+        axisLine: const AxisLine(width: 0),
       ),
-      primaryYAxis: CategoryAxis(
-        majorGridLines: MajorGridLines(width: 0),
-        axisLine: AxisLine(width: 0),
+      primaryYAxis: NumericAxis(
+        majorGridLines: const MajorGridLines(width: 0),
+        axisLine: const AxisLine(width: 0),
+        minimum: minimo,
+        maximum: maximo,
+        interval: 20,
+        title: AxisTitle(text: unidad),
       ),
       series: <AreaSeries<DataGrafica, String>>[
         AreaSeries<DataGrafica, String>(
